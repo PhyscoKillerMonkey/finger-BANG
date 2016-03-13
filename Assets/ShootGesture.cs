@@ -7,7 +7,9 @@ public class ShootGesture : MonoBehaviour {
 	Controller c;
 	float oldPitch;
 	float maxChange;
+	long lastFired = 0;
 	public float threshold;
+	public int fireRateMS;
 	public Rigidbody projectile;
 	public int speedX;
 	public int speedY;
@@ -22,11 +24,13 @@ public class ShootGesture : MonoBehaviour {
 			float newPitch = hand.Direction.Pitch;
 			float change = oldPitch - newPitch;
 			maxChange = Mathf.Max (maxChange, change);
-			Debug.Log ("Change: " + (oldPitch - newPitch) + " Max: " + maxChange);
+			//Debug.Log ("Change: " + (oldPitch - newPitch) + " Max: " + maxChange);
 			//Debug.Log(hand.Direction);
 			oldPitch = newPitch;
-
-			if (change > threshold || Input.GetButtonDown("Fire1")) {
+			long now = c.Now ();
+			Debug.Log (now-lastFired);
+			if ((change > threshold || Input.GetButtonDown("Fire1")) && now - lastFired > fireRateMS) {
+				lastFired = now;
 				Rigidbody clone = (Rigidbody)Instantiate (projectile, transform.position, transform.rotation);
 				clone.velocity = transform.TransformDirection (new Vector3 (speedX, speedY, speedZ));
 				Destroy (clone.gameObject, 5);
