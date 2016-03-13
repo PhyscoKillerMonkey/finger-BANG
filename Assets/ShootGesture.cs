@@ -9,15 +9,15 @@ public class ShootGesture : MonoBehaviour {
 	float maxChange;
 	public float threshold;
 	public Rigidbody projectile;
-	public int speed;
+	public int speedX;
+	public int speedY;
+	public int speedZ;
 
-	void Start ()
-	{
+	void Start () {
 		c = new Controller ();
 	}
 
-	void Update ()
-	{
+	void Update () {
 		foreach (Hand hand in c.Frame().Hands) {
 			float newPitch = hand.Direction.Pitch;
 			float change = oldPitch - newPitch;
@@ -26,9 +26,9 @@ public class ShootGesture : MonoBehaviour {
 			//Debug.Log(hand.Direction);
 			oldPitch = newPitch;
 
-			if (change > threshold) {
+			if (change > threshold || Input.GetButtonDown("Fire1")) {
 				Rigidbody clone = (Rigidbody)Instantiate (projectile, transform.position, transform.rotation);
-				clone.velocity = transform.TransformDirection (new Vector3 (0, 0, speed));
+				clone.velocity = transform.TransformDirection (new Vector3 (speedX, speedY, speedZ));
 				Destroy (clone.gameObject, 5);
 			}
 		}
