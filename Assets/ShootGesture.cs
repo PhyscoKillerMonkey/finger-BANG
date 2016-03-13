@@ -42,6 +42,8 @@ public class ShootGesture : MonoBehaviour {
 		if ((change > threshold || Input.GetButtonDown ("Fire1")) && now - lastFired > fireRateMS) {
 			Debug.Log (change);
 			lastFired = now;
+			Quaternion addRotation = Quaternion.Euler (0, 0, 0);
+			Quaternion finalRotation = transform.rotation * addRotation;
 			Rigidbody clone = (Rigidbody)Instantiate (projectile, transform.position, transform.rotation);
 			clone.velocity = transform.TransformDirection (new Vector3 (speedX, speedY, speedZ));
 			Destroy (clone.gameObject, 5);
